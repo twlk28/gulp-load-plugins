@@ -40,17 +40,18 @@ module.exports = function(options) {
   pattern.push('!gulp-load-plugins');
 
   multimatch(names, pattern).forEach(function(name) {
+    var absname = path.join(parentDir, 'node_modules', name);
     var requireName = name.replace(replaceString, '');
     requireName = camelizePluginName ? camelize(requireName) : requireName;
 
     if(lazy) {
       Object.defineProperty(finalObject, requireName, {
         get: function() {
-          return requireFn(name);
+          return requireFn(absname);
         }
       });
     } else {
-      finalObject[requireName] = requireFn(name);
+      finalObject[requireName] = requireFn(absname);
     }
   });
 
